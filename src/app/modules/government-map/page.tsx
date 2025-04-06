@@ -7,8 +7,17 @@ import mapboxgl from 'mapbox-gl';
 // Set your Mapbox access token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const CHICAGO_COORDINATES = [-87.6298, 41.8781]; // Chicago center
-const ENVIRONMENTAL_AGENCIES = [
+interface Agency {
+  id: number;
+  name: string;
+  position: [number, number];
+  type: string;
+  contact: string;
+  focus: string;
+}
+
+const CHICAGO_COORDINATES: [number, number] = [-87.6298, 41.8781]; // Chicago center
+const ENVIRONMENTAL_AGENCIES: Agency[] = [
   {
     id: 1,
     name: 'Chicago Department of Public Health',
@@ -36,9 +45,9 @@ const ENVIRONMENTAL_AGENCIES = [
 ];
 
 export default function ChicagoEnvironmentMap() {
-  const mapContainerRef = useRef(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
-  const [selectedAgency, setSelectedAgency] = useState(null);
+  const [selectedAgency, setSelectedAgency] = useState<Agency | null>(null);
 
   // Initialize the Mapbox map
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function ChicagoEnvironmentMap() {
 
     const mapInstance = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v12', // Map style
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: CHICAGO_COORDINATES,
       zoom: 10,
     });
@@ -77,22 +86,22 @@ export default function ChicagoEnvironmentMap() {
   }, []);
 
   return (
-    <div>
+    <div className="p-4">
       <h1 className="text-3xl font-bold mb-6">Chicago Environmental Agencies</h1>
 
       {/* Map Container */}
-      <div ref={mapContainerRef} style={{ width: '100%', height: '600px' }} />
+      <div ref={mapContainerRef} className="w-full h-[600px] rounded-lg shadow-lg" />
 
       {/* Popup for selected agency */}
       {selectedAgency && (
-        <div className="popup">
-          <div className="popup-content">
+        <div className="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-4 z-50 max-w-sm">
+          <div className="space-y-2">
             <h3 className="font-bold text-lg">{selectedAgency.name}</h3>
             <p><strong>Type:</strong> {selectedAgency.type}</p>
             <p><strong>Focus:</strong> {selectedAgency.focus}</p>
             <p><strong>Contact:</strong> {selectedAgency.contact}</p>
             <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
               onClick={() => setSelectedAgency(null)}
             >
               Close
@@ -108,39 +117,15 @@ export default function ChicagoEnvironmentMap() {
           {ENVIRONMENTAL_AGENCIES.map((agency) => (
             <div
               key={agency.id}
-              className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+              className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
               onClick={() => setSelectedAgency(agency)}
             >
               <h3 className="font-medium">{agency.name}</h3>
-              <p className="text-sm text-gray-600 mt-1">{agency.type}</p>
+              <p className="text-sm text-black mt-1">{agency.type}</p>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Styling for popup */}
-      <style jsx>{`
-        .popup {
-          position: absolute;
-          bottom: 20px;
-          left: 20px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
-          padding: 16px;
-          z-index: 1000;
-        }
-        .popup-content {
-          max-width: 300px;
-        }
-        .marker {
-          border-radius: 50%;
-          background-color: #28a745;
-          width: 12px;
-          height: 12px;
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 }
