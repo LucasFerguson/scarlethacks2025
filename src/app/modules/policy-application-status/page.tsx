@@ -8,7 +8,7 @@ interface Application {
   id: string;
   policyName: string;
   applicationDate: string;
-  status: 'approved' | 'pending' | 'rejected';
+  status: 'approved' | 'pending' | 'rejected' | 'Applied';
   description: string;
   formData?: {
     name: string;
@@ -19,7 +19,7 @@ interface Application {
   };
 }
 
-type ApplicationFilter = 'all' | 'pending' | 'approved' | 'rejected';
+type ApplicationFilter = 'all' | 'pending' | 'approved' | 'rejected' | 'Applied';
 
 export default function PolicyApplicationStatusPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +68,8 @@ export default function PolicyApplicationStatusPage() {
         return <FaClock className="text-yellow-500 text-xl" />;
       case 'rejected':
         return <FaTimesCircle className="text-red-500 text-xl" />;
+      case 'Applied':
+        return <FaFileAlt className="text-blue-500 text-xl" />;
       default:
         return null;
     }
@@ -81,6 +83,8 @@ export default function PolicyApplicationStatusPage() {
         return 'Pending';
       case 'rejected':
         return 'Rejected';
+      case 'Applied':
+        return 'Applied';
       default:
         return status;
     }
@@ -94,6 +98,8 @@ export default function PolicyApplicationStatusPage() {
         return 'bg-yellow-100 text-yellow-800';
       case 'rejected':
         return 'bg-red-100 text-red-800';
+      case 'Applied':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -109,7 +115,7 @@ export default function PolicyApplicationStatusPage() {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <button
             onClick={() => fetchApplications('all')}
             className={`p-4 rounded-lg border-2 transition-all ${
@@ -125,6 +131,20 @@ export default function PolicyApplicationStatusPage() {
           </button>
           
           <button
+            onClick={() => fetchApplications('Applied')}
+            className={`p-4 rounded-lg border-2 transition-all ${
+              activeFilter === 'Applied'
+                ? 'border-blue-700 bg-blue-50 text-blue-900'
+                : 'border-gray-200 hover:border-blue-500 text-gray-800'
+            }`}
+          >
+            <div className="flex flex-col items-center">
+              <FaFileAlt className="text-2xl mb-2 text-blue-700" />
+              <span className="font-medium">Applied Applications</span>
+            </div>
+          </button>
+          
+          <button
             onClick={() => fetchApplications('pending')}
             className={`p-4 rounded-lg border-2 transition-all ${
               activeFilter === 'pending'
@@ -134,7 +154,7 @@ export default function PolicyApplicationStatusPage() {
           >
             <div className="flex flex-col items-center">
               <FaClock className="text-2xl mb-2 text-yellow-700" />
-              <span className="font-medium">Applied Applications</span>
+              <span className="font-medium">Pending Applications</span>
             </div>
           </button>
           

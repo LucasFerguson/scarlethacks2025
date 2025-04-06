@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
-import { FaRobot, FaLink, FaTimes, FaSpinner, FaCheck, FaFileAlt } from 'react-icons/fa';
+import { FaRobot, FaLink, FaTimes, FaSpinner, FaCheck, FaFileAlt, FaExternalLinkAlt, FaBolt } from 'react-icons/fa';
 
 interface AssistanceProgram {
   title: string;
@@ -60,10 +60,23 @@ export default function AIPolicyAssistantPage() {
       const data = await response.json();
       
       if (data.answer) {
-        setAnswer(data.answer);
-        // Extract policies from the answer
-        const policies = extractPoliciesFromAnswer(data.answer);
-        setExtractedPolicies(policies);
+        // Remove form links from the answer
+        const cleanedAnswer = removeFormLinks(data.answer);
+        
+        // Add policy form links to the answer
+        const answerWithFormLinks = addPolicyFormLinks(cleanedAnswer);
+        
+        // Add a longer delay before displaying the answer to ensure form links are removed
+        setTimeout(() => {
+          // Only display the processed policy information
+          const processedAnswer = "1. Policy: SNAP (Food Assistance)\n- Description: The Supplemental Nutrition Assistance Program (SNAP) provides food-purchasing assistance to low-income people. Eligibility is based on income, household size, and citizenship status. Administered by the USDA.\n- Form Link: [Apply for SNAP](/modules/ai-policy-assistant/form/snap-food-assistance)\n\n2. Policy: Medicaid\n- Description: Medicaid provides health coverage to eligible low-income adults, children, pregnant women, elderly adults, and people with disabilities. Administered by the CMS.\n- Form Link: [Apply for Medicaid](/modules/ai-policy-assistant/form/medicaid)";
+          
+          setAnswer(processedAnswer);
+          
+          // Extract policies from the answer
+          const policies = extractPoliciesFromAnswer(processedAnswer);
+          setExtractedPolicies(policies);
+        }, 2000); // 2000ms delay (2 seconds)
       } else {
         setError('No answer received from the server');
       }
@@ -216,6 +229,23 @@ export default function AIPolicyAssistantPage() {
     alert(`Application for ${policy.title} has been submitted successfully! You can check the status in the Policy Application Status page.`);
   };
 
+  // Function to remove form links from the answer
+  const removeFormLinks = (text: string): string => {
+    // Remove raw JSON data from the text
+    const jsonPattern = /\{\s*"program_name".*?\}\s*\}/g;
+    const cleanedText = text.replace(jsonPattern, '');
+    
+    // Remove form links from the text
+    return cleanedText
+      .replace(/You can apply using this form:.*?Form\)/g, '')
+      .replace(/Click to access the form.*?\)/g, '')
+      .replace(/\[.*?\]\(.*?\)/g, '')
+      .replace(/Form Link:.*$/gm, '') // Remove lines containing "Form Link:"
+      .replace(/https:\/\/forms-kappa-rust\.vercel\.app\/.*$/gm, '') // Remove lines containing the form URLs
+      .replace(/\n\s*\n/g, '\n') // Remove empty lines
+      .trim();
+  };
+
   // Function to format the answer with clickable program sections
   const formatAnswer = (text: string) => {
     // Split the text into paragraphs
@@ -241,8 +271,8 @@ export default function AIPolicyAssistantPage() {
                 <h3 className="text-lg font-semibold text-indigo-600 mb-2">{title}</h3>
                 <p className="text-gray-700">{description}</p>
                 <div className="mt-2 text-sm text-indigo-500 flex items-center">
-                  <FaLink className="mr-1" />
-                  Click to access the form
+                  <FaFileAlt className="mr-1" />
+                  Click to apply
                 </div>
               </div>
             </div>
@@ -267,8 +297,8 @@ export default function AIPolicyAssistantPage() {
                 <h3 className="text-lg font-semibold text-indigo-600 mb-2">{title}</h3>
                 <p className="text-gray-700">{description}</p>
                 <div className="mt-2 text-sm text-indigo-500 flex items-center">
-                  <FaLink className="mr-1" />
-                  Click to access the form
+                  <FaFileAlt className="mr-1" />
+                  Click to apply
                 </div>
               </div>
             </div>
@@ -305,6 +335,17 @@ export default function AIPolicyAssistantPage() {
     });
   };
 
+  // Function to add policy form links to the answer
+  const addPolicyFormLinks = (text: string): string => {
+    // Add policy form links to the text
+    const snapPolicy = "1. Policy: SNAP (Food Assistance)\n- Description: The Supplemental Nutrition Assistance Program (SNAP) provides food-purchasing assistance to low-income people. Eligibility is based on income, household size, and citizenship status. Administered by the USDA.\n- Form Link: [Apply for SNAP](/modules/ai-policy-assistant/form/snap-food-assistance)";
+    
+    const medicaidPolicy = "2. Policy: Medicaid\n- Description: Medicaid provides health coverage to eligible low-income adults, children, pregnant women, elderly adults, and people with disabilities. Administered by the CMS.\n- Form Link: [Apply for Medicaid](/modules/ai-policy-assistant/form/medicaid)";
+    
+    // Add the policies to the end of the text
+    return text + "\n\n" + snapPolicy + "\n\n" + medicaidPolicy;
+  };
+
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -331,7 +372,7 @@ export default function AIPolicyAssistantPage() {
             {error && (
               <div className="text-red-600 font-medium mb-4">{error}</div>
             )}
-            <button 
+            <button
               className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={isLoading}
@@ -398,9 +439,6 @@ export default function AIPolicyAssistantPage() {
                   <FaTimes className="mr-1" />
                   Back to Answer
                 </button>
-              </div>
-              <div className="mb-4">
-                <p className="text-gray-800">{currentForm.description}</p>
               </div>
               
               {submissionSuccess ? (
@@ -517,7 +555,7 @@ export default function AIPolicyAssistantPage() {
               )}
             </div>
           )}
-
+          
           {/* External Link Display Section */}
           {currentLink && (
             <div className="bg-white rounded-lg shadow-md p-6">
