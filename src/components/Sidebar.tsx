@@ -14,6 +14,7 @@ export default function Sidebar() {
     { name: 'AI Policy Assistant', path: '/modules/ai-policy-assistant' },
     { name: 'Policy Opinion', path: '/modules/policy-opinion' },
     { name: 'Map of Government Activity', path: '/modules/government-map' },
+    { name: 'Policy Application Status', path: '/modules/policy-application-status' },
   ];
 
   const isActive = (path: string) => pathname === path;
