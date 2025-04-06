@@ -42,7 +42,112 @@ const ENVIRONMENTAL_AGENCIES: Agency[] = [
     contact: '(312) 814-3117',
     focus: 'Environmental Regulation',
   },
+  {
+    id: 4,
+    name: 'Little Village Environmental Justice Organization (LVEJO)',
+    position: [-87.6946, 41.8475],
+    type: 'Nonprofit',
+    contact: '(773) 762-6991',
+    focus: 'Environmental Justice & Community Health',
+  },
+  {
+    id: 5,
+    name: 'Friends of the Parks',
+    position: [-87.6243, 41.8818],
+    type: 'Nonprofit',
+    contact: '(312) 857-2757',
+    focus: 'Park Advocacy & Environmental Sustainability',
+  },
+  {
+    id: 6,
+    name: 'Blacks in Green (BIG)',
+    position: [-87.6050, 41.7800],
+    type: 'Nonprofit',
+    contact: 'hello@blacksingreen.org',
+    focus: 'Sustainable Development in African American Communities',
+  },
+  {
+    id: 7,
+    name: 'Illinois Environmental Council (IEC)',
+    position: [-87.6319, 41.8832],
+    type: 'Advocacy Group',
+    contact: '(217) 544-5954',
+    focus: 'Environmental Policy & Advocacy',
+  },
+  {
+    id: 8,
+    name: 'Neighbors for Environmental Justice (N4EJ)',
+    position: [-87.6762, 41.8316],
+    type: 'Community-Based Organization',
+    contact: '(312) N/A', // Placeholder for additional info
+    focus: 'Community Organizing & Pollution Prevention',
+  },
+  {
+    id: 9,
+    name: "Chicago Central DMV",
+    position: [-87.6315, 41.8842],
+    type: "DMV",
+    contact: "(312) 793-1010",
+    hours: "Monday–Friday, 8:00–5:00"
+  },
+  {
+    id: 10,
+    name: "Chicago North DMV",
+    position: [-87.7592, 41.9730],
+    type: "DMV",
+    contact: "(312) 793-1010",
+    hours: "Monday–Friday, 8:30–5:30"
+  },
+  {
+    id: 11,
+    name: "Chicago South DMV",
+    position: [-87.6133, 41.7164],
+    type: "DMV",
+    contact: "(312) 793-1010",
+    hours: "Monday–Friday, 8:30–5:00"
+  },
+  {
+    id: 12,
+    name: "Chicago Public Service Center",
+    position: [-87.6283, 41.8821],
+    type: "DMV",
+    contact: "(312) 793-1010",
+    hours: "Monday–Friday, 8:30–5:00"
+  },
+  {
+    id: 13,
+    name: "Englewood Community Service Center (DFSS)",
+    position: [-87.6487, 41.7506],
+    type: "Community Services",
+    contact: "(312) 747-0200",
+    focus: "Family and Support Services"
+  },
+  {
+    id: 14,
+    name: "Garfield Community Service Center (DFSS)",
+    position: [-87.7051, 41.8813],
+    type: "Community Services",
+    contact: "(312) 746-5400",
+    focus: "Family and Support Services"
+  },
+  {
+    id: 15,
+    name: "North Area Community Service Center (DFSS)",
+    position: [-87.6547, 41.9654],
+    type: "Community Services",
+    contact: "(312) 744-2580",
+    focus: "Family and Support Services"
+  },
+  {
+    id: 16,
+    name: "311 City Services",
+    position: [-87.6879, 41.8735],
+    type: "City Services",
+    contact: "(311)",
+    focus:"Non-emergency services like pothole repair or graffiti removal."
+  }
 ];
+
 
 export default function ChicagoEnvironmentMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -64,10 +169,11 @@ export default function ChicagoEnvironmentMap() {
     ENVIRONMENTAL_AGENCIES.forEach((agency) => {
       const markerElement = document.createElement('div');
       markerElement.className = 'marker';
-      markerElement.style.width = '12px';
-      markerElement.style.height = '12px';
-      markerElement.style.backgroundColor = '#28a745';
-      markerElement.style.borderRadius = '50%';
+      markerElement.style.width = '36px';
+      markerElement.style.height = '36px';
+      markerElement.style.backgroundImage = 'url(/office-building-icon-32.png)'; // Replace with the path to your building icon
+      markerElement.style.backgroundSize = 'cover';
+      markerElement.style.borderRadius = '0'; // No border radius for a building shape
       markerElement.style.cursor = 'pointer';
 
       // Add click event to the marker
@@ -87,7 +193,7 @@ export default function ChicagoEnvironmentMap() {
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-6">Chicago Environmental Agencies</h1>
+      <h1 className="text-3xl font-bold mb-6">Chicago Government Agencies</h1>
 
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-[600px] rounded-lg shadow-lg" />
