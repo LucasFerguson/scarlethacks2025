@@ -3,169 +3,111 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { Marker, Popup } from 'react-map-gl'; // Import Marker and Popup
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-// Dynamically import Map component from react-map-gl/mapbox
 const Map = dynamic(
   () => import('react-map-gl/mapbox').then((mod) => mod.Map),
   { ssr: false }
 );
 
-const DEFAULT_VIEW_STATE = {
-  longitude: -95.7129,
-  latitude: 37.0902,
-  zoom: 3.5,
+const CHICAGO_VIEW_STATE = {
+  longitude: -87.6298,  // Chicago coordinates
+  latitude: 41.8781,
+  zoom: 10
 };
 
-const SAMPLE_DATA = [
+const ENVIRONMENTAL_AGENCIES = [
   {
-    position: [-74.006, 40.7128], // New York
-    title: 'New Healthcare Legislation',
-    level: 'Federal',
-    timestamp: new Date('2024-03-15').getTime(),
+    id: 1,
+    name: 'Chicago Department of Public Health',
+    position: [-87.6298, 41.8781],
+    type: 'Government',
+    contact: '(312) 747-9884',
+    focus: 'Environmental Health & Safety'
   },
   {
-    position: [-118.2437, 34.0522], // Los Angeles
-    title: 'Environmental Protection Initiative',
-    level: 'State',
-    timestamp: new Date('2024-03-12').getTime(),
+    id: 2,
+    name: 'MWRD Industrial Waste Division',
+    position: [-87.6337, 41.8775],
+    type: 'Water Management',
+    contact: '(312) 751-5123',
+    focus: 'Wastewater Treatment'
   },
   {
-    position: [-87.6298, 41.8781], // Chicago
-    title: 'Education Funding Program',
-    level: 'Local',
-    timestamp: new Date('2024-03-10').getTime(),
-  },
+    id: 3,
+    name: 'Illinois EPA Chicago Office',
+    position: [-87.6319, 41.8832],
+    type: 'State Agency',
+    contact: '(312) 814-3117',
+    focus: 'Environmental Regulation'
+  }
 ];
 
-export default function GovernmentMapPage() {
-  const [viewState, setViewState] = useState(DEFAULT_VIEW_STATE);
-
-  // Debugging token availability
-  console.log('Mapbox Token:', process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
-  console.log('Token defined?', !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN);
+export default function ChicagoEnvironmentMap() {
+  const [viewState, setViewState] = useState(CHICAGO_VIEW_STATE);
+  const [selectedAgency, setSelectedAgency] = useState(null);
 
   return (
     <DashboardLayout>
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Map of Government Activity</h1>
+        <h1 className="text-3xl font-bold mb-6">Chicago Environmental Agencies</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Filter Options */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Filter Options</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-gray-700 mb-2">Government Level</label>
-                <select className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="">All Levels</option>
-                  <option value="federal">Federal</option>
-                  <option value="state">State</option>
-                  <option value="local">Local</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-2">Policy Area</label>
-                <select className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="">All Areas</option>
-                  <option value="healthcare">Healthcare</option>
-                  <option value="education">Education</option>
-                  <option value="environment">Environment</option>
-                  <option value="economy">Economy</option>
-                  <option value="technology">Technology</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-2">Time Period</label>
-                <select className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="last-month">Last Month</option>
-                  <option value="last-3-months">Last 3 Months</option>
-                  <option value="last-6-months">Last 6 Months</option>
-                  <option value="last-year">Last Year</option>
-                </select>
-              </div>
-              <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-                Apply Filters
-              </button>
-            </div>
-          </div>
+        <div className="h-[600px] relative bg-white rounded-lg shadow-md">
+          <Map
+            mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+            {...viewState}
+            onMove={evt => setViewState(evt.viewState)}
+            mapStyle="mapbox://styles/mapbox/streets-v12"
+          >
+            {ENVIRONMENTAL_AGENCIES.map((agency) => (
+              <div key={agency.id}>
+                <Marker
+                  longitude={agency.position[0]}
+                  latitude={agency.position[1]}
+                  onClick={() => setSelectedAgency(agency)}
+                >
+                  <div className="w-8 h-8 bg-green-600 rounded-full border-2 border-white shadow-lg cursor-pointer" />
+                </Marker>
 
-          {/* Map View */}
-          <div className="md:col-span-2 bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Map View</h2>
-            <div style={{ width: '100%', height: '600px' }}>
-              {/* Map Component */}
-              <Map
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                {...viewState}
-                onMove={(evt) => setViewState(evt.viewState)}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
-                style={{ width: '100%', height: '100%' }}
-              >
-                {/* Render Markers */}
-                {SAMPLE_DATA.map((story, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      position: 'absolute',
-                      transform: `translate(-50%, -50%)`,
-                      backgroundColor:
-                        story.level === 'Federal'
-                          ? 'red'
-                          : story.level === 'State'
-                            ? 'blue'
-                            : 'green',
-                      color: '#fff',
-                      padding: '5px',
-                      borderRadius: '50%',
-                    }}
-                    latitude={story.position[1]}
-                    longitude={story.position[0]}
+                {selectedAgency?.id === agency.id && (
+                  <Popup
+                    longitude={agency.position[0]}
+                    latitude={agency.position[1]}
+                    onClose={() => setSelectedAgency(null)}
+                    anchor="bottom"
                   >
-                    {story.title}
-                  </div>
-                ))}
-              </Map>
-            </div>
-          </div>
+                    <div className="p-4 min-w-[250px]">
+                      <h3 className="font-bold text-lg mb-2">{agency.name}</h3>
+                      <div className="space-y-1">
+                        <p><span className="font-semibold">Type:</span> {agency.type}</p>
+                        <p><span className="font-semibold">Focus Area:</span> {agency.focus}</p>
+                        <p><span className="font-semibold">Contact:</span> {agency.contact}</p>
+                      </div>
+                    </div>
+                  </Popup>
+                )}
+              </div>
+            ))}
+          </Map>
         </div>
 
-        {/* Recent Government Activities */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Government Activities</h2>
-          <div className="space-y-4">
-            {SAMPLE_DATA.map((story, index) => (
-              <div key={index} className="border-b pb-4">
-                <div className="flex justify-between">
-                  <h3 className="font-medium">{story.title}</h3>
-                  <span
-                    className={`text-sm px-2 py-1 rounded ${story.level === 'Federal'
-                        ? 'bg-red-100 text-red-800'
-                        : story.level === 'State'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}
-                  >
-                    {story.level}
-                  </span>
-                </div>
-                <p className="text-gray-600 mt-1">
-                  Location: {story.position[1].toFixed(2)}, {story.position[0].toFixed(2)}
-                </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Posted {new Date(story.timestamp).toLocaleDateString()}
-                </p>
+        <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Featured Agencies</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {ENVIRONMENTAL_AGENCIES.map((agency) => (
+              <div
+                key={agency.id}
+                className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                onClick={() => setSelectedAgency(agency)}
+              >
+                <h3 className="font-medium">{agency.name}</h3>
+                <p className="text-sm text-gray-600 mt-1">{agency.type}</p>
               </div>
             ))}
           </div>
         </div>
-
       </div>
     </DashboardLayout>
   );
-}
-
-// For explicit rendering (if needed)
-export function renderToDOM(container) {
-  require('react-dom/client').createRoot(container).render(<GovernmentMapPage />);
 }
