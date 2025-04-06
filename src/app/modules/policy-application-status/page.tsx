@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
-import { FaSpinner, FaCheckCircle, FaClock, FaExclamationTriangle, FaFileAlt } from 'react-icons/fa';
+import { FaSearch, FaClock, FaCheckCircle, FaTimesCircle, FaFileAlt } from 'react-icons/fa';
 
 interface Application {
   id: string;
@@ -67,7 +67,7 @@ export default function PolicyApplicationStatusPage() {
       case 'pending':
         return <FaClock className="text-yellow-500 text-xl" />;
       case 'rejected':
-        return <FaExclamationTriangle className="text-red-500 text-xl" />;
+        return <FaTimesCircle className="text-red-500 text-xl" />;
       default:
         return null;
     }
@@ -103,131 +103,132 @@ export default function PolicyApplicationStatusPage() {
     <DashboardLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4 text-indigo-800">Policy Application Status</h1>
-          <p className="text-gray-600">
-            View the status of your policy applications. Select a category to filter your applications.
+          <h1 className="text-3xl font-bold mb-4 text-blue-900">Policy Application Status</h1>
+          <p className="text-gray-800">
+            Track the status of your policy applications and view their details.
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-indigo-700">Application Categories</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button
-              className={`p-4 rounded-lg flex flex-col items-center justify-center transition-all ${
-                activeFilter === 'all' 
-                  ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-500' 
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-              onClick={() => fetchApplications('all')}
-            >
-              <FaFileAlt className="text-2xl mb-2" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <button
+            onClick={() => fetchApplications('all')}
+            className={`p-4 rounded-lg border-2 transition-all ${
+              activeFilter === 'all'
+                ? 'border-blue-700 bg-blue-50 text-blue-900'
+                : 'border-gray-200 hover:border-blue-500 text-gray-800'
+            }`}
+          >
+            <div className="flex flex-col items-center">
+              <FaFileAlt className="text-2xl mb-2 text-blue-700" />
               <span className="font-medium">All Applications</span>
-            </button>
-            
-            <button
-              className={`p-4 rounded-lg flex flex-col items-center justify-center transition-all ${
-                activeFilter === 'pending' 
-                  ? 'bg-yellow-100 text-yellow-800 border-2 border-yellow-500' 
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-              onClick={() => fetchApplications('pending')}
-            >
-              <FaClock className="text-2xl mb-2" />
-              <span className="font-medium">Applied Applications</span>
-            </button>
-            
-            <button
-              className={`p-4 rounded-lg flex flex-col items-center justify-center transition-all ${
-                activeFilter === 'approved' 
-                  ? 'bg-green-100 text-green-800 border-2 border-green-500' 
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-              onClick={() => fetchApplications('approved')}
-            >
-              <FaCheckCircle className="text-2xl mb-2" />
-              <span className="font-medium">Approved Applications</span>
-            </button>
-            
-            <button
-              className={`p-4 rounded-lg flex flex-col items-center justify-center transition-all ${
-                activeFilter === 'rejected' 
-                  ? 'bg-red-100 text-red-800 border-2 border-red-500' 
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-              onClick={() => fetchApplications('rejected')}
-            >
-              <FaExclamationTriangle className="text-2xl mb-2" />
-              <span className="font-medium">Rejected Applications</span>
-            </button>
-          </div>
+            </div>
+          </button>
           
-          {error && (
-            <div className="mt-4 text-red-500">{error}</div>
-          )}
+          <button
+            onClick={() => fetchApplications('pending')}
+            className={`p-4 rounded-lg border-2 transition-all ${
+              activeFilter === 'pending'
+                ? 'border-yellow-700 bg-yellow-50 text-yellow-900'
+                : 'border-gray-200 hover:border-yellow-500 text-gray-800'
+            }`}
+          >
+            <div className="flex flex-col items-center">
+              <FaClock className="text-2xl mb-2 text-yellow-700" />
+              <span className="font-medium">Applied Applications</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => fetchApplications('approved')}
+            className={`p-4 rounded-lg border-2 transition-all ${
+              activeFilter === 'approved'
+                ? 'border-green-700 bg-green-50 text-green-900'
+                : 'border-gray-200 hover:border-green-500 text-gray-800'
+            }`}
+          >
+            <div className="flex flex-col items-center">
+              <FaCheckCircle className="text-2xl mb-2 text-green-700" />
+              <span className="font-medium">Approved Applications</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => fetchApplications('rejected')}
+            className={`p-4 rounded-lg border-2 transition-all ${
+              activeFilter === 'rejected'
+                ? 'border-red-700 bg-red-50 text-red-900'
+                : 'border-gray-200 hover:border-red-500 text-gray-800'
+            }`}
+          >
+            <div className="flex flex-col items-center">
+              <FaTimesCircle className="text-2xl mb-2 text-red-700" />
+              <span className="font-medium">Rejected Applications</span>
+            </div>
+          </button>
         </div>
         
         {isLoading && (
-          <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
-            <FaSpinner className="text-4xl text-indigo-600 animate-spin mb-4" />
-            <p className="text-indigo-600 font-medium">Loading applications...</p>
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto mb-4"></div>
+            <p className="text-blue-800 font-medium">Loading applications...</p>
           </div>
         )}
         
-        {applications.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4 text-indigo-700">
-              {activeFilter === 'all' ? 'All Applications' : 
-               activeFilter === 'pending' ? 'Applied Applications' :
-               activeFilter === 'approved' ? 'Approved Applications' : 'Rejected Applications'}
-            </h2>
-            <div className="space-y-4">
-              {applications.map((app) => (
-                <div key={app.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-semibold text-indigo-600">{app.policyName}</h3>
-                    <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center ${getStatusClass(app.status)}`}>
-                      {getStatusIcon(app.status)}
-                      <span className="ml-1">{getStatusText(app.status)}</span>
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+            {error}
+          </div>
+        )}
+        
+        {!isLoading && !error && (
+          <div className="space-y-4">
+            {applications.length === 0 ? (
+              <div className="text-center py-8 bg-gray-50 rounded-lg">
+                <p className="text-gray-800">No applications found for this category.</p>
+              </div>
+            ) : (
+              applications.map((application) => (
+                <div
+                  key={application.id}
+                  className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-blue-900 mb-1">
+                        {application.policyName}
+                      </h3>
+                      <p className="text-sm text-gray-800">
+                        Application Date: {new Date(application.applicationDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(application.status)}`}>
+                      {getStatusText(application.status)}
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500 mb-2">
-                    Application Date: {new Date(app.applicationDate).toLocaleDateString()}
-                  </div>
-                  <p className="text-gray-700">{app.description}</p>
                   
-                  {app.formData && (
-                    <div className="mt-3 pt-3 border-t border-gray-200">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Application Details:</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <p className="text-gray-800 mb-4">{application.description}</p>
+
+                  {application.formData && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <h4 className="text-sm font-semibold text-blue-800 mb-3">Application Details</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <span className="font-medium">Name:</span> {app.formData.name}
+                          <p className="text-sm text-gray-700">Name: <span className="text-gray-900">{application.formData.name}</span></p>
+                          <p className="text-sm text-gray-700">Email: <span className="text-gray-900">{application.formData.email}</span></p>
+                          <p className="text-sm text-gray-700">Phone: <span className="text-gray-900">{application.formData.phone}</span></p>
                         </div>
                         <div>
-                          <span className="font-medium">Email:</span> {app.formData.email}
+                          <p className="text-sm text-gray-700">Address: <span className="text-gray-900">{application.formData.address}</span></p>
+                          {application.formData.additionalInfo && (
+                            <p className="text-sm text-gray-700">Additional Info: <span className="text-gray-900">{application.formData.additionalInfo}</span></p>
+                          )}
                         </div>
-                        <div>
-                          <span className="font-medium">Phone:</span> {app.formData.phone}
-                        </div>
-                        <div>
-                          <span className="font-medium">Address:</span> {app.formData.address}
-                        </div>
-                        {app.formData.additionalInfo && (
-                          <div className="col-span-2">
-                            <span className="font-medium">Additional Info:</span> {app.formData.additionalInfo}
-                          </div>
-                        )}
                       </div>
                     </div>
                   )}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {!isLoading && applications.length === 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6 text-center">
-            <p className="text-gray-600">No applications found in this category.</p>
+              ))
+            )}
           </div>
         )}
       </div>

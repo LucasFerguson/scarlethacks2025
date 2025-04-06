@@ -309,8 +309,8 @@ export default function AIPolicyAssistantPage() {
     <DashboardLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4 text-indigo-800">AI Policy Assistant</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold mb-4 text-blue-900">AI Policy Assistant</h1>
+          <p className="text-gray-800">
             Ask questions about government policies and assistance programs. Our AI assistant will help you find relevant information and resources.
           </p>
         </div>
@@ -318,10 +318,10 @@ export default function AIPolicyAssistantPage() {
         <div className="space-y-6">
           {/* AI Assistant Input Section */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4 text-indigo-700">Ask Your Question</h2>
+            <h2 className="text-xl font-semibold mb-4 text-blue-800">Ask Your Question</h2>
             <div className="mb-4">
               <textarea 
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 rows={4}
                 placeholder="Ask about government policies, assistance programs, or eligibility requirements..."
                 value={question}
@@ -329,10 +329,10 @@ export default function AIPolicyAssistantPage() {
               ></textarea>
             </div>
             {error && (
-              <div className="text-red-500 mb-4">{error}</div>
+              <div className="text-red-600 font-medium mb-4">{error}</div>
             )}
             <button 
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={isLoading}
             >
@@ -343,8 +343,8 @@ export default function AIPolicyAssistantPage() {
           {/* Loading Indicator */}
           {isLoading && (
             <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
-              <FaSpinner className="text-4xl text-indigo-600 animate-spin mb-4" />
-              <p className="text-indigo-600 font-medium">Fetching information from AI assistant...</p>
+              <FaSpinner className="text-4xl text-blue-700 animate-spin mb-4" />
+              <p className="text-blue-800 font-medium">Fetching information from AI assistant...</p>
             </div>
           )}
           
@@ -352,25 +352,25 @@ export default function AIPolicyAssistantPage() {
           {answer && !isLoading && !currentForm && !currentLink && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center mb-4">
-                <FaRobot className="text-2xl text-indigo-600 mr-2" />
-                <h2 className="text-xl font-semibold text-indigo-700">AI Assistant Response</h2>
+                <FaRobot className="text-2xl text-blue-700 mr-2" />
+                <h2 className="text-xl font-semibold text-blue-800">AI Assistant Response</h2>
               </div>
-              <div className="prose max-w-none">
+              <div className="prose max-w-none text-gray-900">
                 {formatAnswer(answer)}
               </div>
               
               {/* Quick Submit Section */}
               {extractedPolicies.length > 0 && (
                 <div className="mt-8 border-t border-gray-200 pt-6">
-                  <h3 className="text-lg font-semibold text-indigo-700 mb-4">Quick Submit Applications</h3>
+                  <h3 className="text-lg font-semibold text-blue-800 mb-4">Quick Submit Applications</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {extractedPolicies.map((policy, index) => (
                       <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <h4 className="text-md font-semibold text-indigo-600 mb-2">{policy.title}</h4>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{policy.description}</p>
+                        <h4 className="text-md font-semibold text-blue-700 mb-2">{policy.title}</h4>
+                        <p className="text-sm text-gray-800 mb-3 line-clamp-2">{policy.description}</p>
                         <button
                           onClick={() => handleQuickSubmit(policy)}
-                          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm flex items-center"
+                          className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 text-sm flex items-center"
                         >
                           <FaFileAlt className="mr-2" />
                           Submit Application
@@ -388,28 +388,28 @@ export default function AIPolicyAssistantPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <FaRobot className="text-2xl text-indigo-600 mr-2" />
-                  <h2 className="text-xl font-semibold text-indigo-700">{currentForm.title}</h2>
+                  <FaRobot className="text-2xl text-blue-700 mr-2" />
+                  <h2 className="text-xl font-semibold text-blue-800">{currentForm.title}</h2>
                 </div>
                 <button 
                   onClick={closeForm}
-                  className="text-gray-500 hover:text-gray-700 flex items-center"
+                  className="text-gray-700 hover:text-gray-900 flex items-center"
                 >
                   <FaTimes className="mr-1" />
                   Back to Answer
                 </button>
               </div>
               <div className="mb-4">
-                <p className="text-gray-700">{currentForm.description}</p>
+                <p className="text-gray-800">{currentForm.description}</p>
               </div>
               
               {submissionSuccess ? (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                   <div className="flex justify-center mb-4">
-                    <FaCheck className="text-4xl text-green-500" />
+                    <FaCheck className="text-4xl text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-green-700 mb-2">Application Submitted Successfully!</h3>
-                  <p className="text-gray-700 mb-4">
+                  <h3 className="text-xl font-semibold text-green-800 mb-2">Application Submitted Successfully!</h3>
+                  <p className="text-gray-800 mb-4">
                     Your application for {currentForm.title} has been submitted. You can check the status of your application in the Policy Application Status page.
                   </p>
                   <button
@@ -424,64 +424,64 @@ export default function AIPolicyAssistantPage() {
                   {showFormFields ? (
                     <form onSubmit={handleFormSubmit} className="space-y-4">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-1">Full Name</label>
                         <input
                           type="text"
                           id="name"
                           name="name"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                           value={formData.name}
                           onChange={handleInputChange}
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-1">Email Address</label>
                         <input
                           type="email"
                           id="email"
                           name="email"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                           value={formData.email}
                           onChange={handleInputChange}
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-800 mb-1">Phone Number</label>
                         <input
                           type="tel"
                           id="phone"
                           name="phone"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                           value={formData.phone}
                           onChange={handleInputChange}
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-800 mb-1">Address</label>
                         <input
                           type="text"
                           id="address"
                           name="address"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                           value={formData.address}
                           onChange={handleInputChange}
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700 mb-1">Additional Information</label>
+                        <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-800 mb-1">Additional Information</label>
                         <textarea
                           id="additionalInfo"
                           name="additionalInfo"
                           rows={3}
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                           value={formData.additionalInfo}
                           onChange={handleInputChange}
                         ></textarea>
@@ -490,7 +490,7 @@ export default function AIPolicyAssistantPage() {
                       <div className="flex justify-end">
                         <button
                           type="submit"
-                          className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                          className="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
@@ -523,12 +523,12 @@ export default function AIPolicyAssistantPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <FaRobot className="text-2xl text-indigo-600 mr-2" />
-                  <h2 className="text-xl font-semibold text-indigo-700">{currentLink.title}</h2>
+                  <FaRobot className="text-2xl text-blue-700 mr-2" />
+                  <h2 className="text-xl font-semibold text-blue-800">{currentLink.title}</h2>
                 </div>
                 <button 
                   onClick={closeLink}
-                  className="text-gray-500 hover:text-gray-700 flex items-center"
+                  className="text-gray-700 hover:text-gray-900 flex items-center"
                 >
                   <FaTimes className="mr-1" />
                   Back to Answer
