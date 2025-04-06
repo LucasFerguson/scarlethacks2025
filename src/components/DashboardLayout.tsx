@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { ChatBot } from './ChatBot';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -38,6 +39,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 overflow-auto p-8">
         {children}
       </main>
+      <ChatBot />
     </div>
   );
 } 
