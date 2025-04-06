@@ -9,14 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@deck.gl/core": "^9.1.8",
+    "@deck.gl/layers": "^9.1.8",
+    "@deck.gl/mapbox": "^9.1.8",
+    "@deck.gl/react": "^9.1.8",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.5.0",
     "bcryptjs": "^3.0.2",
+    "mapbox-gl": "^3.11.0",
     "next": "15.2.4",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
+    "react-map-gl": "^8.0.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
